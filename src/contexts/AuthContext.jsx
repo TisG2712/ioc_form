@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { isTokenExpired, shouldLogout } from "../utils/tokenUtils";
-import { logout as logoutApi } from "../service/login";
 
 const AuthContext = createContext();
 
@@ -22,24 +20,23 @@ export const AuthProvider = ({ children }) => {
     const storedLogin = sessionStorage.getItem("isLoggedIn");
     const storedUser = sessionStorage.getItem("username");
     const storedRefreshToken = localStorage.getItem("refreshToken");
-    const storedToken = localStorage.getItem("token");
 
-    // Check if user should be logged out
-    if (shouldLogout(storedToken, storedRefreshToken)) {
-      // Clear all auth data
+    // Simplified check - chỉ cần có refreshToken và isLoggedIn
+    if (storedLogin === "true" && storedRefreshToken) {
+      setIsLoggedIn(true);
+      setUsername(storedUser || "");
+      setRefreshToken(storedRefreshToken);
+    } else {
+      // Clear all auth data nếu không có dữ liệu hợp lệ
       sessionStorage.removeItem("isLoggedIn");
       sessionStorage.removeItem("username");
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("isLoggedIn");
-      
+
       setIsLoggedIn(false);
       setUsername("");
       setRefreshToken("");
-    } else if (storedLogin === "true" && storedRefreshToken) {
-      setIsLoggedIn(true);
-      setUsername(storedUser || "");
-      setRefreshToken(storedRefreshToken);
     }
 
     setIsLoading(false);
@@ -58,30 +55,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try {
-      // Call logout API if refresh token exists
-      const refreshTokenValue = localStorage.getItem("refreshToken");
-      if (refreshTokenValue) {
-        await logoutApi(refreshTokenValue);
-      }
-    } catch (error) {
-      console.error('Logout API error:', error);
-      // Continue with local logout even if API fails
-    } finally {
-      // Clear all auth data
-      sessionStorage.removeItem("isLoggedIn");
-      sessionStorage.removeItem("username");
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("isLoggedIn");
-      
-      setIsLoggedIn(false);
-      setUsername("");
-      setRefreshToken("");
-      
-      // Redirect to login page
-      window.location.href = "/login";
-    }
+    // Simplified logout - chỉ cần clear local data
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("username");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("isLoggedIn");
+
+    setIsLoggedIn(false);
+    setUsername("");
+    setRefreshToken("");
+
+    // Redirect to login page
+    window.location.href = "/login";
   };
 
   const forceLogout = () => {
@@ -91,11 +77,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("isLoggedIn");
-    
+
     setIsLoggedIn(false);
     setUsername("");
     setRefreshToken("");
-    
+
     // Silent redirect without notification, preserve current path
     const currentPath = window.location.pathname;
     window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;

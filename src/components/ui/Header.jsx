@@ -17,7 +17,7 @@ const Header = memo(() => {
       />
       <div className="relative flex items-center justify-between h-full sm:px-6 z-10">
         <div className="flex items-center min-w-0">
-          <Link to="/dashboard" title="Home" className="shrink-0">
+          <Link to="/form" title="Home" className="shrink-0">
             <img
               src={NationalEmblem}
               alt="National Emblem"
@@ -29,7 +29,7 @@ const Header = memo(() => {
               TRUNG TÂM ĐIỀU HÀNH THÔNG MINH IOC - TỈNH ĐỒNG NAI
             </h2>
             <h3 className="text-blue-950 text-sm sm:text-md mt-1 sm:mt-0 font-semibold drop-shadow truncate">
-              HỆ THỐNG GIÁM SÁT
+              HỆ THỐNG BỔ SUNG DỮ LIỆU
             </h3>
           </div>
         </div>
@@ -43,6 +43,6 @@ const Header = memo(() => {
   );
 });
 
-Header.displayName = 'Header';
+Header.displayName = "Header";
 
 export default Header;

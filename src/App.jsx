@@ -6,96 +6,44 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login/Login";
-import Home from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
-import { CacheProvider } from "./contexts/CacheContext";
 import PublicRoute from "./components/auth/PublicRoute";
-import Monitor from "./pages/Monitor/Monitor";
-import Medical from "./pages/Medical/Medical";
-import Education from "./pages/Education/Education";
-import Traffic from "./pages/Traffic/Traffic";
-import Population from "./pages/Population/Population";
+import Form from "./pages/FormManagement/Form";
 import Toast from "./components/ui/Toast";
 function App() {
   return (
-    <AuthProvider>
-      <CacheProvider>
+    <div className="h-screen overflow-hidden">
+      <AuthProvider>
         <Router>
           <Routes>
-          {/* Trang Login: /login */}
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
+            {/* Trang Login: /login */}
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
 
-          {/* Các route cần đăng nhập */}
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/monitor"
-            element={
-              <ProtectedRoute>
-                <Monitor />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={<Navigate to="http://localhost:5174/dashboard" replace />}
-          />
-          <Route
-            path="/medical"
-            element={
-              <ProtectedRoute>
-                <Medical />
-              </ProtectedRoute>
-            }
-          />
+            {/* Các route cần đăng nhập */}
+            <Route
+              path="/form"
+              element={
+                <ProtectedRoute>
+                  <Form />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/education"
-            element={
-              <ProtectedRoute>
-                <Education />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/traffic"
-            element={
-              <ProtectedRoute>
-                <Traffic />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/population"
-            element={
-              <ProtectedRoute>
-                <Population />
-              </ProtectedRoute>
-            }
-          />
-          {/* Redirect tất cả route không hợp lệ về login */}
-          <Route path="*" element={<Navigate to="/monitor" replace />} />
+            {/* Redirect tất cả route không hợp lệ về login */}
+            <Route path="*" element={<Navigate to="/form" replace />} />
           </Routes>
         </Router>
-      </CacheProvider>
-      <Toast />
-    </AuthProvider>
+        <Toast />
+      </AuthProvider>
+    </div>
   );
 }
 

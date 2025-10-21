@@ -4,7 +4,12 @@ import Button from "../ui/Button";
 import { changePassword } from "../../service/login";
 import { useAuth } from "../../contexts/AuthContext";
 
-const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSuccess }) => {
+const ChangePasswordModal = ({
+  isOpen,
+  onClose,
+  username: propUsername,
+  onSuccess,
+}) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,7 +18,7 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
   const [fadeOut, setFadeOut] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { username: contextUsername, logout } = useAuth();
-  
+
   // Sử dụng username từ props hoặc context
   const username = propUsername || contextUsername;
 
@@ -23,7 +28,8 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
     let formErrors = {};
     if (!oldPassword) formErrors.oldPassword = "Vui lòng nhập mật khẩu cũ";
     if (!newPassword) formErrors.newPassword = "Vui lòng nhập mật khẩu mới";
-    if (!confirmPassword) formErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
+    if (!confirmPassword)
+      formErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
     if (newPassword && confirmPassword && newPassword !== confirmPassword) {
       formErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
     }
@@ -39,17 +45,17 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
       await changePassword({
         username: username,
         oldPassword: oldPassword,
-        newPassword: newPassword
+        newPassword: newPassword,
       });
-      
+
       setNotification({ type: "success", message: "Đổi mật khẩu thành công!" });
-      
+
       // Clear form
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setErrors({});
-      
+
       // Call onSuccess callback if provided
       if (onSuccess) {
         setTimeout(() => {
@@ -63,11 +69,10 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
           setNotification(null);
         }, 2000);
       }
-      
     } catch (error) {
       setNotification({
         type: "error",
-        message: error.response?.data?.message || "Không thể đổi mật khẩu"
+        message: error.response?.data?.message || "Không thể đổi mật khẩu",
       });
     } finally {
       setIsLoading(false);
@@ -140,20 +145,35 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
             <Button
               type="button"
               onClick={handleClose}
-              className="bg-gray-500 hover:bg-gray-600"
+              className="w-auto px-4 py-2 bg-gray-500 text-white hover:bg-gray-600 focus:ring-gray-500"
               disabled={isLoading}
             >
               Hủy
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isLoading}
-              className="flex items-center gap-2"
+              className="w-auto px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 flex items-center gap-2"
             >
               {isLoading && (
-                <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
               )}
               {isLoading ? "Đang xử lý..." : "Đổi mật khẩu"}
@@ -165,7 +185,9 @@ const ChangePasswordModal = ({ isOpen, onClose, username: propUsername, onSucces
           <div
             className={`fixed top-5 right-5 px-4 py-2 rounded shadow-lg text-white text-sm transition-opacity duration-500 ${
               fadeOut ? "opacity-0" : "opacity-100"
-            } ${notification.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+            } ${
+              notification.type === "success" ? "bg-green-500" : "bg-red-500"
+            }`}
           >
             {notification.message}
           </div>

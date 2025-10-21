@@ -19,10 +19,11 @@ const PublicRoute = ({ children }) => {
     );
   }
 
-  // Nếu đã đăng nhập và đang cố vào trang /login thì đẩy sang trang trước đó hoặc /monitor
+  // Nếu đã đăng nhập và đang cố vào trang /login thì đẩy sang trang trước đó hoặc /form
   if (isLoggedIn && location.pathname === "/login") {
-    // Check for redirect parameter first, then state, then default to /monitor
-    const redirectPath = searchParams.get('redirect') || location.state?.from?.pathname || "/monitor";
+    // Check for redirect parameter first, then state, then default to /form
+    const redirectPath =
+      searchParams.get("redirect") || location.state?.from?.pathname || "/form";
     return <Navigate to={redirectPath} replace />;
   }
 

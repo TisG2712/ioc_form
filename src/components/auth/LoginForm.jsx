@@ -31,8 +31,8 @@ const LoginForm = () => {
         setTimeout(() => {
           setNotification(null);
           if (notification.type === "success") {
-            // Check for redirect parameter, otherwise go to dashboard
-            const redirectPath = searchParams.get("redirect") || "/dashboard";
+            // Check for redirect parameter, otherwise go to form
+            const redirectPath = searchParams.get("redirect") || "/form";
             navigate(redirectPath);
           }
         }, 500);
@@ -53,42 +53,29 @@ const LoginForm = () => {
     if (Object.keys(formErrors).length > 0) return;
 
     setIsLoginLoading(true);
-    try {
-      const response = await login({ username, password });
-      const token = response?.body?.token || response?.data?.body?.token;
-      const refreshToken =
-        response?.body?.refreshToken || response?.data?.body?.refreshToken;
 
-      if (token) {
-        authLogin(username, refreshToken); // Cập nhật trạng thái đăng nhập trong AuthContext
+    // Mock authentication - chỉ cần password = "pass"
+    setTimeout(() => {
+      if (password === "pass") {
+        // Mock token và refresh token
+        const mockToken = "mock-jwt-token-" + Date.now();
+        const mockRefreshToken = "mock-refresh-token-" + Date.now();
+
+        // Lưu vào localStorage như bình thường
+        localStorage.setItem("token", mockToken);
+        localStorage.setItem("refreshToken", mockRefreshToken);
+        localStorage.setItem("isLoggedIn", "true");
+
+        authLogin(username, mockRefreshToken);
         setNotification({ type: "success", message: "Đăng nhập thành công!" });
-      }
-    } catch (error) {
-      const errorData = error.response?.data;
-
-      // Kiểm tra nếu mật khẩu hết hạn hoặc cần đổi mật khẩu
-      if (
-        errorData?.error === "Mật khẩu đã hết hạn hoặc cần đổi mật khẩu" ||
-        errorData?.message?.includes("Sử dụng API /auth/change-password")
-      ) {
-        // Lưu username để sử dụng trong popup đổi mật khẩu
-        setTempUsername(username);
-        // Hiển thị popup đổi mật khẩu
-        setShowChangePassword(true);
-        setNotification({
-          type: "info",
-          message: "Mật khẩu tạm thời đã hết hạn. Vui lòng đổi mật khẩu mới.",
-        });
       } else {
         setNotification({
           type: "error",
-          message:
-            errorData?.message || "Tên đăng nhập hoặc mật khẩu không đúng!",
+          message: "Mật khẩu không đúng! Vui lòng nhập 'pass' để đăng nhập.",
         });
       }
-    } finally {
       setIsLoginLoading(false);
-    }
+    }, 500); // Simulate loading time
   };
 
   const handleForgot = async (e) => {
@@ -123,7 +110,7 @@ const LoginForm = () => {
       <PreferenceControls />
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-xl w-[380px] h-[450px] max-w-md"
+        className="bg-white p-6 rounded-2xl shadow-xl w-[380px] h-auto max-w-md"
       >
         {/* Logo Section */}
         <div className="text-center mb-6 mt-3">
@@ -178,7 +165,7 @@ const LoginForm = () => {
           icon="lock"
           disabled={isLoginLoading}
         />
-        <div className="mt-6  ">
+        <div className="mt-6">
           <Button
             type="submit"
             disabled={isLoginLoading}
@@ -250,26 +237,18 @@ const LoginForm = () => {
               disabled={isForgotLoading}
             />
             <div className="flex justify-end gap-2 mt-3">
-              <button
+              <Button
                 type="button"
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                className="w-auto px-3 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-500"
                 onClick={() => setShowForgot(false)}
                 disabled={isForgotLoading}
-                style={{
-                  fontFamily: "'Roboto Condensed', Arial, sans-serif",
-                  letterSpacing: "0.3px",
-                }}
               >
                 Hủy
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-50 flex items-center gap-2"
+                className="w-auto px-3 py-1 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 flex items-center gap-2"
                 disabled={isForgotLoading}
-                style={{
-                  fontFamily: "'Roboto Condensed', Arial, sans-serif",
-                  letterSpacing: "0.3px",
-                }}
               >
                 <span className="flex items-center gap-2">
                   {isForgotLoading ? "Đang gửi..." : "Gửi"}
@@ -295,7 +274,7 @@ const LoginForm = () => {
                     </svg>
                   )}
                 </span>
-              </button>
+              </Button>
             </div>
           </form>
         </div>

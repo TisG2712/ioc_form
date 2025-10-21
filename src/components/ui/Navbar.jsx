@@ -1,27 +1,17 @@
 import React, { useRef, useState, memo, useCallback } from "react";
-import {
-  FaHome,
-  FaEye,
-  FaHospital,
-  FaBook,
-  FaChartLine,
-  FaUsers,
-  FaRoad,
-  FaUserShield,
-  FaChevronUp,
-  FaChevronDown,
-} from "react-icons/fa";
+import { FaRegFileAlt, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom"; // 👈 dùng Link thay vì navigate
 
 const menuItems = [
-  { name: "Trang chủ", icon: <FaHome />, path: "/home" },
-  { name: "Giám sát", icon: <FaEye />, path: "/monitor" },
-  { name: "Y tế", icon: <FaHospital />, path: "/medical" },
-  { name: "Giáo dục", icon: <FaBook />, path: "/education" },
-  { name: "Dữ liệu dân cư", icon: <FaUsers />, path: "/population" },
-  { name: "Giao thông", icon: <FaRoad /> },
-  { name: "An ninh - Trật tự", icon: <FaUserShield /> },
-  { name: "KT - XH", icon: <FaChartLine /> },
+  { name: "Quản lý biểu mẫu", icon: <FaRegFileAlt />, path: "/form" },
+  // { name: "Trang chủ", icon: <FaHome />, path: "/home" },
+  // { name: "Giám sát", icon: <FaEye />, path: "/monitor" },
+  // { name: "Y tế", icon: <FaHospital />, path: "/medical" },
+  // { name: "Giáo dục", icon: <FaBook />, path: "/education" },
+  // { name: "Dữ liệu dân cư", icon: <FaUsers />, path: "/population" },
+  // { name: "Giao thông", icon: <FaRoad /> },
+  // { name: "An ninh - Trật tự", icon: <FaUserShield /> },
+  // { name: "KT - XH", icon: <FaChartLine /> },
 ];
 
 const Navbar = memo(() => {
@@ -66,6 +56,6 @@ const Navbar = memo(() => {
   );
 });
 
-Navbar.displayName = 'Navbar';
+Navbar.displayName = "Navbar";
 
 export default Navbar;
